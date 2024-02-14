@@ -6,4 +6,4 @@
 
 ## INSTALL
 
-go get github.com/akademic/go-logger@v0.9.0
+go get github.com/akademic/go-logger
