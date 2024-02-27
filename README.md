@@ -1,3 +1,8 @@
+## What it for?
+
+This package is a simple logging library for Go.
+It uses "log" package from stdlib to print logs, but wraps it with minimal logging levels and prefixes support.
+
 ## FEATURES
 
 - Only stdlib dependencies
