@@ -1,12 +1,14 @@
 package logger
 
 import (
+	"io"
 	"log"
 )
 
 type baseLogger interface {
 	Printf(format string, v ...any)
 	Print(v ...any)
+	Writer() io.Writer
 }
 
 type LoggerImpl struct {
@@ -66,6 +68,10 @@ func (l *LoggerImpl) Debug(pattern string, args ...any) {
 		return
 	}
 	l.baseLogger.Printf("[dbg] "+pattern, args...)
+}
+
+func (l *LoggerImpl) Writer() io.Writer {
+	return l.baseLogger.Writer()
 }
 
 func (l *LoggerImpl) SetConfig(config *Config) {
