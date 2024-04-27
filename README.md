@@ -128,3 +128,72 @@ func NewAPI(l logger.Logger) (*API, error) {
     customerApiLogger.Info("customer api started") // [inf] [customer-api] customer api started
 }
 ```
+
+### Output redirection
+
+As it uses "log" package from stdlib, you can redirect output to a file or any other io.Writer.
+
+#### Redirect to a file
+
+```go
+
+package main
+
+import (
+    "github.com/akademic/go-logger"
+    "log"
+    "os"
+)
+
+func main() {
+    f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+    if err != nil {
+        fmt.Fatalf("failed to open log file: %v", err)
+    }
+    defer f.Close()
+
+    log.SetOutput(f)
+
+    l := logger.New("", logger.Config{
+        Level: logger.LogDebug,
+        ComponentLevel: map[string]logger.LogLevel{
+            "db": logger.LogError,
+            "api": logger.LogInfo,
+        },
+    })
+
+    l.Info("number: %d", 2) // [inf] number: 2
+}
+```
+
+#### Redirecto to remote syslog
+
+```go
+
+package main
+
+import (
+    "github.com/akademic/go-logger"
+    "log"
+    "log/syslog"
+)
+
+func main() {
+    syslogWriter, err := syslog.Dial("udp", "syslog-server:514", syslog.LOG_INFO, "myapp")
+    if err != nil {
+        fmt.Fatalf("failed to connect to syslog server: %v", err)
+    }
+
+    log.SetOutput(syslogWriter)
+
+    l := logger.New("", logger.Config{
+        Level: logger.LogDebug,
+        ComponentLevel: map[string]logger.LogLevel{
+            "db": logger.LogError,
+            "api": logger.LogInfo,
+        },
+    })
+
+    l.Info("number: %d", 2) // [inf] number: 2
+}
+```
