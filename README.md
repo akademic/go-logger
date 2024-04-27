@@ -166,7 +166,7 @@ func main() {
 }
 ```
 
-#### Redirecto to remote syslog
+#### Redirect to remote syslog over udp
 
 ```go
 
