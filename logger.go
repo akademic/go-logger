@@ -75,7 +75,15 @@ func (l *LoggerImpl) Writer() io.Writer {
 }
 
 func (l *LoggerImpl) SetConfig(config *Config) {
+	if config == nil {
+		return
+	}
+
 	l.config.Level = config.Level
+
+	if config.ComponentLevel != nil {
+		l.config.ComponentLevel = config.ComponentLevel
+	}
 }
 
 func (l *LoggerImpl) logOn(level LogLevel) bool {
