@@ -109,8 +109,14 @@ type Logger interface {
     Error(format string, args ...interface{})
     Info(format string, args ...interface{})
     Debug(format string, args ...interface{})
+    Writer() io.Writer
 }
 ```
+
+`LoggerImpl` also provides methods not in the interface:
+
+- `SetFlags(flag int)` — customize underlying `log.Logger` flags (date, time, etc.)
+- `SetConfig(config *Config)` — change logging configuration at runtime
 
 Use it to receive a logger instance.
 
@@ -127,6 +133,23 @@ func NewAPI(l logger.Logger) (*API, error) {
 
     customerApiLogger.Info("customer api started") // [inf] [customer-api] customer api started
 }
+```
+
+### Customize log flags
+
+By default, the logger uses `log.LstdFlags` (date and time). You can change the flags using `SetFlags` method, which accepts standard `log` package flags.
+
+```go
+l := logger.New("", &logger.Config{Level: logger.LogDebug})
+
+// Remove all flags (no date/time prefix)
+l.SetFlags(0)
+
+// Use date, time and microseconds
+l.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds)
+
+// Use UTC time
+l.SetFlags(log.Ldate | log.Ltime | log.LUTC)
 ```
 
 ### Output redirection

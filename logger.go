@@ -74,6 +74,12 @@ func (l *LoggerImpl) Writer() io.Writer {
 	return l.baseLogger.Writer()
 }
 
+func (l *LoggerImpl) SetFlags(flag int) {
+	if logger, ok := l.baseLogger.(*log.Logger); ok {
+		logger.SetFlags(flag)
+	}
+}
+
 func (l *LoggerImpl) SetConfig(config *Config) {
 	if config == nil {
 		return
